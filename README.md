@@ -1,5 +1,6 @@
 # Установка
 
-- composer install
-- php artisan storage:link
-- php artisan migrate
+Для устновки выполните команды
+
+- `composer install`
+- `php artisan shop:install`
