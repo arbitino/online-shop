@@ -4,36 +4,15 @@ namespace App\Providers;
 
 use App\Http\Kernel;
 use Carbon\CarbonInterval;
-use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         Model::shouldBeStrict(!app()->isProduction());
-
-        DB::whenQueryingForLongerThan(CarbonInterval::seconds(60), function (Connection $connection) {
-            logger()->channel('telegram')
-                ->debug('First connect longer than 60s - ' . $connection->totalQueryDuration());
-        });
 
         DB::listen(function ($query) {
             if ($query->time > 5) {
@@ -42,9 +21,7 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        $kernel = app(Kernel::class);
-
-        $kernel->whenRequestLifecycleIsLongerThan(
+        app(Kernel::class)->whenRequestLifecycleIsLongerThan(
             CarbonInterval::seconds(4),
             function () {
                 logger()->channel('telegram')
