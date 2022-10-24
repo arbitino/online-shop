@@ -19,15 +19,6 @@ class Product extends Model
         'brand_id'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        self::creating(function (Product $product) {
-            $product->slug = $product->slug ?? str($product->title)->slug();
-        });
-    }
-
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);

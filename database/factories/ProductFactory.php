@@ -20,7 +20,12 @@ class ProductFactory extends Factory
     {
         return [
             'title' => $this->faker->company(),
-            'thumbnail' => '',
+            'thumbnail' => $this->faker
+                ->file(
+                    base_path('/tests/Fixtures/images/products'),
+                    storage_path('/app/public/images/products'),
+                    false
+                ),
             'price' => $this->faker->numberBetween(500, 20000),
             'brand_id' => Brand::query()->inRandomOrder()->value('id')
 
