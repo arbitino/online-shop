@@ -3,7 +3,7 @@
 @section('title', 'Сброс пароля')
 
 @section('content')
-    <x-forms.auth-forms title="Сброс пароля" action="{{ route('reset') }}" method="POST">
+    <x-forms.auth-forms title="Сброс пароля" action="{{ route('reset.handle') }}" method="POST">
         <x-slot:form>
             @csrf
 
