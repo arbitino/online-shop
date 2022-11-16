@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Auth\Routing;
+namespace App\Routing;
 
 use App\Contracts\RouteRegistrar;
 use App\Http\Controllers\Auth\ForgotPassword;
@@ -40,7 +40,7 @@ class AuthRegistrar implements RouteRegistrar
             Route::controller(ForgotPassword::class)->group(function () {
                 Route::get('/forgot', 'page')
                     ->middleware('guest')
-                    ->name('forgot');
+                    ->name('password.reset');
 
                 Route::post('/forgot', 'handle')
                     ->middleware('guest')
