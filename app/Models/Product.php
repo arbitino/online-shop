@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Pipeline\Pipeline;
 use Support\Casts\PriceCast;
 use Support\Traits\Models\HasImage;
 use Support\Traits\Models\HasSlug;
@@ -30,7 +31,8 @@ class Product extends Model
 		'price',
 		'brand_id',
 		'sort',
-		'on_home_page'
+		'on_home_page',
+		'text'
 	];
 
 	public function scopeHomePage(Builder $query)
@@ -38,6 +40,28 @@ class Product extends Model
 		$query->where('on_home_page', true)
 			->orderBy('sort')
 			->limit(10);
+	}
+
+	public function scopeFiltered(Builder $query)
+	{
+		return app(Pipeline::class)
+			->send($query)
+			->through(filters())
+			->thenReturn();
+	}
+
+	public function scopeSorted(Builder $query)
+	{
+		$query->when(request('sort'), function (Builder $query) {
+			$column = request()->str('sort');
+
+			if ($column->contains(['price', 'title'])) {
+				$direction = $column->contains('-') ? 'DESC' : 'ASC';
+
+
+				$query->orderBy($column->remove('-'), $direction);
+			}
+		});
 	}
 
 	public function brand(): BelongsTo

@@ -7,18 +7,20 @@ use Illuminate\Support\Facades\Storage;
 
 class FakerImageProvider extends Base
 {
-    public function fixturesImage(string $fixturesDir, string $storageDir): string
-    {
-        if (!Storage::exists($storageDir)) {
-            Storage::makeDirectory($storageDir);
-        }
+	public function fixturesImage(string $fixturesDir, string $storageDir): string
+	{
+		$storage = Storage::disk('images');
 
-        $file = $this->generator->file(
-            base_path('tests/Fixtures/images/' . $fixturesDir),
-            Storage::path($storageDir),
-            false
-        );
+		if (!$storage->exists($storageDir)) {
+			$storage->makeDirectory($storageDir);
+		}
 
-        return '/storage/' . trim($storageDir, '/') . '/' . $file;
-    }
+		$file = $this->generator->file(
+			base_path('tests/Fixtures/images/' . $fixturesDir),
+			$storage->path($storageDir),
+			false
+		);
+
+		return '/storage/images/' . trim($storageDir, '/') . '/' . $file;
+	}
 }

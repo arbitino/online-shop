@@ -20,11 +20,12 @@ class ProductFactory extends Factory
 	{
 		return [
 			'title' => $this->faker->company(),
-			'thumbnail' => $this->faker->fixturesImage('products', 'images/products'),
+			'thumbnail' => $this->faker->fixturesImage('products', 'products'),
 			'price' => $this->faker->numberBetween(50000, 2000000),
 			'brand_id' => Brand::query()->inRandomOrder()->value('id'),
 			'on_home_page' => $this->faker->boolean(),
-			'sort' => $this->faker->numberBetween(1, 1000)
+			'sort' => $this->faker->numberBetween(1, 1000),
+			'text' => $this->faker->realText()
 
 		];
 	}

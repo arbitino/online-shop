@@ -10,55 +10,55 @@ use Tests\TestCase;
 
 class HomeControllerTest extends TestCase
 {
-    use RefreshDatabase;
+	use RefreshDatabase;
 
-    /**
-     * @test
-     * @return void
-     */
-    public function it_success_response(): void
-    {
-        ProductFactory::new()->count(5)
-            ->create([
-                'on_home_page' => true,
-                'sort' => 999,
-            ]);
+	/**
+	 * @test
+	 * @return void
+	 */
+	public function it_success_response(): void
+	{
+		ProductFactory::new()->count(5)
+			->create([
+				'on_home_page' => true,
+				'sort' => 999,
+			]);
 
-        $product = ProductFactory::new()
-            ->createOne([
-                'on_home_page' => true,
-                'sort' => 1,
-            ]);
+		$product = ProductFactory::new()
+			->createOne([
+				'on_home_page' => true,
+				'sort' => 1,
+			]);
 
-        CategoryFactory::new()->count(5)
-            ->create([
-                'on_home_page' => true,
-                'sort' => 999,
-            ]);
+		CategoryFactory::new()->count(5)
+			->create([
+				'on_home_page' => true,
+				'sort' => 999,
+			]);
 
-        $category = CategoryFactory::new()
-            ->createOne([
-                'on_home_page' => true,
-                'sort' => 1,
-            ]);
+		$category = CategoryFactory::new()
+			->createOne([
+				'on_home_page' => true,
+				'sort' => 1,
+			]);
 
-        BrandFactory::new()->count(5)
-            ->create([
-                'on_home_page' => true,
-                'sort' => 999,
-            ]);
+		BrandFactory::new()->count(5)
+			->create([
+				'on_home_page' => true,
+				'sort' => 999,
+			]);
 
-        $brand = BrandFactory::new()
-            ->createOne([
-                'on_home_page' => true,
-                'sort' => 1,
-            ]);
+		$brand = BrandFactory::new()
+			->createOne([
+				'on_home_page' => true,
+				'sort' => 1,
+			]);
 
-        $this->get(action([HomeController::class, 'index']))
-            ->assertOk()
-            ->assertViewHas('categories.0', $category)
-            ->assertViewHas('brands.0', $brand)
-            ->assertViewHas('products.0', $product);
-    }
+		$this->get(action([HomeController::class, 'index']))
+			->assertOk()
+			->assertViewHas('categories.0', $category)
+			->assertViewHas('brands.0', $brand)
+			->assertViewHas('products.0', $product);
+	}
 
 }

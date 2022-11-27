@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class BrandFactory extends Factory
 {
-    protected $model = Brand::class;
+	protected $model = Brand::class;
 
-    public function definition(): array
-    {
-        return [
-            'title' => $this->faker->word(),
-            'thumbnail' => $this->faker->fixturesImage('brands', 'images/brands'),
-            'on_home_page' => $this->faker->boolean(),
-            'sort' => $this->faker->numberBetween(1, 1000)
-        ];
-    }
+	public function definition(): array
+	{
+		return [
+			'title' => $this->faker->word(),
+			'thumbnail' => $this->faker->fixturesImage('brands', 'brands'),
+			'on_home_page' => $this->faker->boolean(),
+			'sort' => $this->faker->numberBetween(1, 1000)
+		];
+	}
 }

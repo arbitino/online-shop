@@ -7,23 +7,25 @@ use Illuminate\Support\Facades\Storage;
 
 class RefreshCommand extends Command
 {
-    protected $signature = 'shop:refresh';
+	protected $signature = 'shop:refresh';
 
-    protected $description = 'refresh';
+	protected $description = 'refresh';
 
-    public function handle(): int
-    {
-        if (app()->isProduction()) {
-            return self::FAILURE;
-        }
+	public function handle(): int
+	{
+		if (app()->isProduction()) {
+			return self::FAILURE;
+		}
 
-        Storage::deleteDirectory('images/products');
-        Storage::deleteDirectory('images/brands');
+		$this->call('cache:clear');
 
-        $this->call('migrate:fresh', [
-            '--seed' => true
-        ]);
+		Storage::deleteDirectory('images/products');
+		Storage::deleteDirectory('images/brands');
 
-        return self::SUCCESS;
-    }
+		$this->call('migrate:fresh', [
+			'--seed' => true
+		]);
+
+		return self::SUCCESS;
+	}
 }
