@@ -3,19 +3,16 @@
 namespace Database\Factories;
 
 use Domain\Catalog\Models\Brand;
+use Domain\Product\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
-	/**
-	 * Define the model's default state.
-	 *
-	 * @return array<string, mixed>
-	 * @throws \Exception
-	 */
+	protected $model = Product::class;
+
 	public function definition(): array
 	{
 		return [

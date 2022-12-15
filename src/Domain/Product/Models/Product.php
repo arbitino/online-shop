@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Models;
+namespace Domain\Product\Models;
 
+use App\Jobs\ProductJsonProperties;
 use Domain\Catalog\Models\Brand;
 use Domain\Catalog\Models\Category;
-use Illuminate\Database\Eloquent\Builder;
+use Domain\Product\QueryBuilders\ProductQueryBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Pipeline\Pipeline;
 use Support\Casts\PriceCast;
 use Support\Traits\Models\HasImage;
 use Support\Traits\Models\HasSlug;
 
+/**
+ * @property mixed $optionValues
+ * @property mixed $properties
+ */
 class Product extends Model
 {
 	use HasFactory;
@@ -21,7 +25,8 @@ class Product extends Model
 	use HasImage;
 
 	protected $casts = [
-		'price' => PriceCast::class
+		'price' => PriceCast::class,
+		'json_properties' => 'array',
 	];
 
 	protected $fillable = [
@@ -32,35 +37,22 @@ class Product extends Model
 		'brand_id',
 		'sort',
 		'on_home_page',
-		'text'
+		'text',
+		'json_properties',
 	];
 
-	public function scopeHomePage(Builder $query)
+	public function newEloquentBuilder($query): ProductQueryBuilder
 	{
-		$query->where('on_home_page', true)
-			->orderBy('sort')
-			->limit(10);
+		return new ProductQueryBuilder($query);
 	}
 
-	public function scopeFiltered(Builder $query)
+	protected static function boot()
 	{
-		return app(Pipeline::class)
-			->send($query)
-			->through(filters())
-			->thenReturn();
-	}
+		parent::boot();
 
-	public function scopeSorted(Builder $query)
-	{
-		$query->when(request('sort'), function (Builder $query) {
-			$column = request()->str('sort');
-
-			if ($column->contains(['price', 'title'])) {
-				$direction = $column->contains('-') ? 'DESC' : 'ASC';
-
-
-				$query->orderBy($column->remove('-'), $direction);
-			}
+		static::created(function (Product $product) {
+			ProductJsonProperties::dispatch($product)
+				->delay(now()->addSeconds(10));
 		});
 	}
 
@@ -72,6 +64,17 @@ class Product extends Model
 	public function categories(): BelongsToMany
 	{
 		return $this->belongsToMany(Category::class);
+	}
+
+	public function properties(): BelongsToMany
+	{
+		return $this->belongsToMany(Property::class)
+			->withPivot('value');
+	}
+
+	public function optionValues(): BelongsToMany
+	{
+		return $this->belongsToMany(OptionValue::class);
 	}
 
 	protected function imageDir(): string

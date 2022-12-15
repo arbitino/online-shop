@@ -1,5 +1,5 @@
 <div class="product-card flex flex-col rounded-3xl bg-card">
-	<a href="#" class="product-card-photo overflow-hidden h-[320px] rounded-3xl">
+	<a href="{{ route('product', $item) }}" class="product-card-photo overflow-hidden h-[320px] rounded-3xl">
 		<img src="{{ $item->makeImage('345x320') }}" class="object-cover w-full h-full" alt="{{ $item->title }}">
 	</a>
 	<div class="grow flex flex-col py-8 px-6">
@@ -26,6 +26,12 @@
 							d="M26 48.486c-.263 0-.526-.067-.762-.203-.255-.148-6.336-3.679-12.504-8.998-3.656-3.153-6.574-6.28-8.673-9.295C1.344 26.09-.022 22.338 0 18.84c.025-4.072 1.483-7.901 4.106-10.782 2.667-2.93 6.226-4.544 10.021-4.544 4.865 0 9.312 2.725 11.872 7.042 2.56-4.317 7.007-7.042 11.872-7.042 3.586 0 7.007 1.456 9.634 4.1 2.883 2.9 4.52 7 4.494 11.245-.022 3.493-1.414 7.24-4.137 11.135-2.105 3.012-5.02 6.138-8.66 9.29-6.146 5.32-12.183 8.85-12.437 8.997a1.524 1.524 0 0 1-.766.206Z"/>
 					</svg>
 				</a>
+
+				<ul style="width: 100%">
+					@foreach($item->json_properties as $name => $value)
+						<li><strong>{{ $name }}</strong>: {{ $value }}</li>
+					@endforeach
+				</ul>
 			</div>
 		</div>
 	</div>

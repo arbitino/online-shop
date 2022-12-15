@@ -2,7 +2,6 @@
 
 namespace Domain\Catalog\Models;
 
-use App\Models\Product;
 use Domain\Catalog\Collections\CategoryCollection;
 use Domain\Catalog\QueryBuilders\BrandQueryBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,6 +36,6 @@ class Category extends Model
 
 	public function products(): BelongsToMany
 	{
-		return $this->belongsToMany(Product::class);
+		return $this->belongsToMany(\Domain\Product\Models\Product::class);
 	}
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Domain\Catalog\Models\Category;
+use Domain\Product\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,7 +19,7 @@ class CatalogController extends Controller
 			->get();
 
 		$products = Product::query()
-			->select(['id', 'title', 'slug', 'price', 'thumbnail'])
+			->select(['id', 'title', 'slug', 'price', 'thumbnail', 'json_properties'])
 			->when(request('s'), function (Builder $q) {
 				return $q->whereFullText(['text', 'title'], request('s'));
 			})
