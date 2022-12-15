@@ -71,7 +71,8 @@
 						</div>
 
 						<ul class="sm:max-w-[360px] space-y-2 mt-8">
-							@foreach($product->json_properties as $name => $value)
+
+							@foreach($product->completeProperties as $name => $value)
 								<li class="flex justify-between text-body">
 									<strong>{{ $name }}:</strong> {{ $value }}
 								</li>

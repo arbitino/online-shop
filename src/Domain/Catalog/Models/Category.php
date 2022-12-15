@@ -11,6 +11,7 @@ use Support\Traits\Models\HasSlug;
 
 /**
  * @method static Category|BrandQueryBuilder query()
+ * @property int $id
  */
 class Category extends Model
 {

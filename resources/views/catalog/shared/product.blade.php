@@ -28,7 +28,7 @@
 				</a>
 
 				<ul style="width: 100%">
-					@foreach($item->json_properties as $name => $value)
+					@foreach($item->completeProperties as $name => $value)
 						<li><strong>{{ $name }}</strong>: {{ $value }}</li>
 					@endforeach
 				</ul>

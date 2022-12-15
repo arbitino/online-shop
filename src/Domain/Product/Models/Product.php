@@ -3,9 +3,11 @@
 namespace Domain\Product\Models;
 
 use App\Jobs\ProductJsonProperties;
+use Database\Factories\ProductFactory;
 use Domain\Catalog\Models\Brand;
 use Domain\Catalog\Models\Category;
 use Domain\Product\QueryBuilders\ProductQueryBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,14 +17,22 @@ use Support\Traits\Models\HasImage;
 use Support\Traits\Models\HasSlug;
 
 /**
+ *
+ *
  * @property mixed $optionValues
  * @property mixed $properties
+ * @property int $id
  */
 class Product extends Model
 {
 	use HasFactory;
 	use HasSlug;
 	use HasImage;
+
+	protected static function newFactory(): ProductFactory
+	{
+		return ProductFactory::new();
+	}
 
 	protected $casts = [
 		'price' => PriceCast::class,
@@ -40,6 +50,18 @@ class Product extends Model
 		'text',
 		'json_properties',
 	];
+
+	public function completeProperties(): Attribute
+	{
+		return Attribute::make(function () {
+			if (!is_null($this->json_properties) && count($this->json_properties)) {
+				return $this->json_properties;
+			}
+
+			return $this->load('properties')
+				->properties->keyValues();
+		});
+	}
 
 	public function newEloquentBuilder($query): ProductQueryBuilder
 	{
